@@ -7,7 +7,7 @@ Profile Description:
 Ensures PCI-DSS v3 related security configuration settings \n \ are applied.  
   
 Benchmark ID:  RHEL-7  
-Benchmark Version:  0.1.40  
+Benchmark Version:  0.1.41  
   
 XCCDF Version:  1.1  
   
