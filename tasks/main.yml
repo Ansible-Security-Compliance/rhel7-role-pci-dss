@@ -1,9 +1,3 @@
--   name: XCCDF Value sshd_idle_timeout_value
-    set_fact:
-        sshd_idle_timeout_value: '900'
-    tags:
-    - always
-
 -   name: Set SSH Idle Timeout Interval
     lineinfile:
         create: true
@@ -33,24 +27,6 @@
     - '{{ low_disruption | bool }}'
     - '{{ sshd_set_idle_timeout | bool }}'
     - '{{ restrict_strategy | bool }}'
-
--   name: XCCDF Value var_accounts_passwords_pam_faillock_deny
-    set_fact:
-        var_accounts_passwords_pam_faillock_deny: '6'
-    tags:
-    - always
-
--   name: XCCDF Value var_accounts_passwords_pam_faillock_unlock_time
-    set_fact:
-        var_accounts_passwords_pam_faillock_unlock_time: '1800'
-    tags:
-    - always
-
--   name: XCCDF Value var_accounts_passwords_pam_faillock_fail_interval
-    set_fact:
-        var_accounts_passwords_pam_faillock_fail_interval: '900'
-    tags:
-    - always
 
 -   name: set auth pam_faillock before pam_unix.so
     pamd:
@@ -143,12 +119,6 @@
     - '{{ restrict_strategy | bool }}'
     - '{{ accounts_passwords_pam_faillock_deny | bool }}'
 
--   name: XCCDF Value var_password_pam_unix_remember
-    set_fact:
-        var_password_pam_unix_remember: '4'
-    tags:
-    - always
-
 -   name: Do not allow users to reuse recent passwords - system-auth (change)
     replace:
         dest: /etc/pam.d/system-auth
@@ -201,12 +171,6 @@
     - '{{ accounts_password_pam_unix_remember | bool }}'
     - '{{ low_complexity | bool }}'
 
--   name: XCCDF Value var_password_pam_ucredit
-    set_fact:
-        var_password_pam_ucredit: '-1'
-    tags:
-    - always
-
 -   name: Ensure PAM variable ucredit is set accordingly
     lineinfile:
         create: true
@@ -231,12 +195,6 @@
     - '{{ low_disruption | bool }}'
     - '{{ restrict_strategy | bool }}'
     - '{{ low_complexity | bool }}'
-
--   name: XCCDF Value var_password_pam_dcredit
-    set_fact:
-        var_password_pam_dcredit: '-1'
-    tags:
-    - always
 
 -   name: Ensure PAM variable dcredit is set accordingly
     lineinfile:
@@ -264,12 +222,6 @@
     - '{{ restrict_strategy | bool }}'
     - '{{ low_complexity | bool }}'
 
--   name: XCCDF Value var_password_pam_minlen
-    set_fact:
-        var_password_pam_minlen: '7'
-    tags:
-    - always
-
 -   name: Ensure PAM variable minlen is set accordingly
     lineinfile:
         create: true
@@ -293,12 +245,6 @@
     - '{{ low_disruption | bool }}'
     - '{{ restrict_strategy | bool }}'
     - '{{ low_complexity | bool }}'
-
--   name: XCCDF Value var_password_pam_lcredit
-    set_fact:
-        var_password_pam_lcredit: '-1'
-    tags:
-    - always
 
 -   name: Ensure PAM variable lcredit is set accordingly
     lineinfile:
@@ -438,12 +384,6 @@
     - '{{ no_empty_passwords | bool }}'
     - '{{ high_severity | bool }}'
 
--   name: XCCDF Value var_account_disable_post_pw_expiration
-    set_fact:
-        var_account_disable_post_pw_expiration: '90'
-    tags:
-    - always
-
 -   name: Set Account Expiration Following Inactivity
     lineinfile:
         create: true
@@ -470,12 +410,6 @@
     - '{{ low_disruption | bool }}'
     - '{{ restrict_strategy | bool }}'
     - '{{ low_complexity | bool }}'
-
--   name: XCCDF Value var_accounts_maximum_age_login_defs
-    set_fact:
-        var_accounts_maximum_age_login_defs: '90'
-    tags:
-    - always
 
 -   name: Set Password Maximum Age
     lineinfile:
@@ -530,8 +464,8 @@
     - '{{ high_severity | bool }}'
 
 -   name: Read signatures in GPG key
-    shell: gpg --with-fingerprint '/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release' | grep 'Key fingerprint =' | tr -s ' ' | sed
-        's;.*= ;;g'
+    shell: gpg --with-fingerprint --with-colons "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release" | grep "^fpr" | cut -d ":" -f
+        10
     changed_when: false
     register: gpg_fingerprints
     check_mode: false
@@ -557,8 +491,7 @@
 
 -   name: Set Fact - Valid fingerprints
     set_fact:
-        gpg_valid_fingerprints: ("567E 347A D004 4ADE 55BA 8A5F 199E 2F91 FD43 1D51" "43A6 E49C 4A38 F4BE 9ABF 2A53 4568 9C88
-            2FA6 58E0")
+        gpg_valid_fingerprints: ("567E347AD0044ADE55BA8A5F199E2F91FD431D51" "43A6E49C4A38F4BE9ABF2A5345689C882FA658E0")
     tags:
     - ensure_redhat_gpgkey_installed
     - high_severity
@@ -784,12 +717,6 @@
     - '{{ medium_disruption | bool }}'
     - '{{ unknown_strategy | bool }}'
     - '{{ low_complexity | bool }}'
-
--   name: XCCDF Value inactivity_timeout_value
-    set_fact:
-        inactivity_timeout_value: '900'
-    tags:
-    - always
 
 -   name: Set GNOME3 Screensaver Inactivity Timeout
     ini_file:
@@ -1680,12 +1607,6 @@
     - '{{ package_libreswan_installed | bool }}'
     - '{{ low_complexity | bool }}'
 
--   name: XCCDF Value var_auditd_max_log_file
-    set_fact:
-        var_auditd_max_log_file: '6'
-    tags:
-    - always
-
 -   name: Configure auditd Max Log File Size
     lineinfile:
         dest: /etc/audit/auditd.conf
@@ -1712,12 +1633,6 @@
     - '{{ auditd_data_retention_max_log_file | bool }}'
     - '{{ restrict_strategy | bool }}'
     - '{{ low_complexity | bool }}'
-
--   name: XCCDF Value var_auditd_max_log_file_action
-    set_fact:
-        var_auditd_max_log_file_action: rotate
-    tags:
-    - always
 
 -   name: Configure auditd max_log_file_action Upon Reaching Maximum Log Size
     lineinfile:
@@ -1746,12 +1661,6 @@
     - '{{ restrict_strategy | bool }}'
     - '{{ auditd_data_retention_max_log_file_action | bool }}'
     - '{{ low_complexity | bool }}'
-
--   name: XCCDF Value var_auditd_admin_space_left_action
-    set_fact:
-        var_auditd_admin_space_left_action: single
-    tags:
-    - always
 
 -   name: Configure auditd admin_space_left Action on Low Disk Space
     lineinfile:
@@ -1783,12 +1692,6 @@
     - '{{ medium_severity | bool }}'
     - '{{ restrict_strategy | bool }}'
 
--   name: XCCDF Value var_auditd_action_mail_acct
-    set_fact:
-        var_auditd_action_mail_acct: root
-    tags:
-    - always
-
 -   name: Configure auditd mail_acct Action on Low Disk Space
     lineinfile:
         dest: /etc/audit/auditd.conf
@@ -1819,12 +1722,6 @@
     - '{{ restrict_strategy | bool }}'
     - '{{ low_complexity | bool }}'
 
--   name: XCCDF Value var_auditd_space_left_action
-    set_fact:
-        var_auditd_space_left_action: email
-    tags:
-    - always
-
 -   name: Configure auditd space_left Action on Low Disk Space
     lineinfile:
         dest: /etc/audit/auditd.conf
@@ -1854,12 +1751,6 @@
     - '{{ low_disruption | bool }}'
     - '{{ restrict_strategy | bool }}'
     - '{{ low_complexity | bool }}'
-
--   name: XCCDF Value var_auditd_num_logs
-    set_fact:
-        var_auditd_num_logs: '5'
-    tags:
-    - always
 
 -   name: Configure auditd Number of Logs Retained
     lineinfile:
